@@ -1,0 +1,189 @@
+#:kivy 2.0.0
+#:import MDDropdownMenu kivymd.uix.menu.MDDropdownMenu
+
+
+<CustomInput>:
+    name: ''
+    visible: True
+    lbl_width: 160
+    units: 'mm'
+    value: 0
+    input: ''
+    isFloat: True
+
+    MDLabel:
+        id: c_label
+        font_size: 20
+        pos: 20, root.top - self.height -10
+        text: root.name + ' ' + '(' + root.units + ')'
+        size_hint: None, None
+        size: root.lbl_width, 40
+        halign: 'left'
+        valign: 'center'
+    MDTextField:
+        id: c_text
+        font_size: 20
+        center_y: c_label.center_y
+        x: c_label.right + 10
+        text: str(root.value)
+        size_hint: None, None
+#        size: 100 if root.visible else '0dp', 40 if root.visible else '0dp'
+        opacity: 100 if root.visible else '0dp'
+    MDLabel:
+        id: ValueLbl
+        font_size: 20
+        center_y: c_label.center_y
+        x: c_text.right + 10
+        text: root.input
+        size_hint: None, None
+        size: 75, 40
+        halign: 'left'
+        valign: 'center'
+
+<PCC>:
+    # Printer info side
+    MDGridLayout:
+        pos_hint: {'x': 0, 'top': 0.99}
+        size_hint: 0.6, 0.85
+#        height: root.height
+        width: 200
+        padding: 10
+        cols: 1
+        rows: 9
+
+        CustomInput:
+            id: XPos
+            name: 'X:'
+            visible: False
+            value: root._x
+
+        CustomInput:
+            id: YPos
+            name: 'Y:'
+            visible: False
+            value: root._y
+
+        CustomInput:
+            id: ZPos
+            name: 'Z:'
+            visible: False
+            value: root._z
+
+        CustomInput:
+            id: FeedRate
+            name: 'Feed Rate:'
+            units: 'mm/s'
+            value: 1000
+
+        CustomInput:
+            id: FilamentRate
+            name: 'Filament Rate:'
+            units: 'mm/move'
+            value: 10
+
+        BoxLayout:
+            CustomInput:
+                id: ExtruderTemp
+                name: 'Extruder Temp:'
+                units: 'Deg'
+                isFloat: False
+            MDIconButton:
+                user_font_size: "48sp"
+                md_bg_color: root._heater_color
+                icon: root._heater_icon
+                on_release: root.on_heat_pressed()
+
+        CustomInput:
+            id: BedTemp
+            name: 'Bed Temp:'
+            units: 'Deg'
+            isFloat: False
+
+        CustomInput:
+            id: DPadStep
+            name: 'D Pad Step'
+            units: 'Steps'
+            value: 10
+
+        BoxLayout:
+            padding: 10
+            spacing: 20
+
+            MDLabel:
+                id: PrintArea
+                font_size: 20
+                pos: 20, root.top - self.height -10
+                text: 'Print Area:'
+                size_hint: None, None
+                size: 120, 40
+                halign: 'left'
+                valign: 'center'
+            TextInput:
+                id: BedInputX
+                font_size: 20
+                text: str(root._bedX)
+                size_hint: None, None
+                size: 60, 40
+            TextInput:
+                id: BedInputY
+                font_size: 20
+                text: str(root._bedY)
+                size_hint: None, None
+                size: 60, 40
+            TextInput:
+                id: BedInputZ
+                font_size: 20
+                text: str(root._printZ)
+                size_hint: None, None
+                size: 60, 40
+
+
+    MDLabel:
+        id: SerialPortLabel
+        x: 15
+        y: 30
+        font_size: 20
+        text: str('Port:')
+        size_hint: None, None
+        size: 50, 40
+        halign: 'left'
+        valign: 'center'
+
+    MDDropDownItem:
+        id: SerialPortDropdown
+        y: SerialPortLabel.y
+        x: SerialPortLabel.right + 30
+        font_size: 20
+        text: 'No Port Selected'
+#        pos_hint: None, None
+        size: 100, SerialPortLabel.height
+#        size_hint: .1, .1
+        ver_growth: 'up'
+#        on_release: MDDropdownMenu(items=root._ports, width_mult=4).open()
+#        items: root._ports
+        on_release: root._menu.open()
+
+    MDFillRoundFlatButton:
+        id: ConnectButton
+        pos_hint: {'right': .99}
+        y: SerialPortLabel.y
+        text: 'Connect'
+        size_hint: [.15, .15]
+        width: 75
+        padding_x: 100
+
+    MDIconButton:
+        id: E-Stop
+        pos_hint: {'right': .99, 'top': .99}
+#        text: 'E-Stop'
+#        size_hint: [.3, .3]
+#        width: 75
+        user_font_size: "64sp"
+
+        md_bg_color: 'red'
+        icon: 'alert-decagram'
+        on_release: root.on_emergency_stop_pressed()
+
+
+
+
